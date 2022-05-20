@@ -13,6 +13,8 @@ import { ServerlessContracts } from '@swarmion/serverless-plugin';
 import { functions } from 'functions';
 import { cdkResources } from 'resources';
 
+import { MyClass } from './myClass';
+
 const serverlessConfiguration: AWS & ServerlessContracts = {
   service: `${projectName}-orchestrator`, // Keep it short to have role name below 64
   frameworkVersion,
@@ -22,6 +24,7 @@ const serverlessConfiguration: AWS & ServerlessContracts = {
     '@swarmion/serverless-plugin',
     'serverless-iam-roles-per-function',
     'serverless-analyze-bundle-plugin',
+    './serverlessCdk.ts',
   ],
   params: sharedParams,
   provider: {
@@ -32,6 +35,8 @@ const serverlessConfiguration: AWS & ServerlessContracts = {
   custom: {
     projectName,
     esbuild: sharedEsbuildConfig,
+    myClass: MyClass,
+    myString: 'hi guys',
   },
   contracts: {
     provides: {
