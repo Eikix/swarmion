@@ -4384,6 +4384,7 @@ __metadata:
     "@swarmion/configuration": ^0.6.0
     "@swarmion/eslint-plugin": ^0.6.0
     "@swarmion/orchestrator-contracts": ^0.6.0
+    "@swarmion/serverless-cdk": ^1.0.0
     "@swarmion/serverless-configuration": ^0.6.0
     "@swarmion/serverless-contracts": ^0.6.0
     "@swarmion/serverless-helpers": ^0.6.0
@@ -4580,7 +4581,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@swarmion/serverless-cdk@workspace:packages/serverless-cdk":
+"@swarmion/serverless-cdk@^1.0.0, @swarmion/serverless-cdk@workspace:packages/serverless-cdk":
   version: 0.0.0-use.local
   resolution: "@swarmion/serverless-cdk@workspace:packages/serverless-cdk"
   dependencies:
@@ -4600,6 +4601,7 @@ __metadata:
     jest: "npm:^27.5.1"
     json-schema-to-ts: "npm:^2.3.0"
     prettier: "npm:^2.6.2"
+    serverless: "npm:^3.16.0"
     ts-node: "npm:^10.6.0"
     ttypescript: "npm:^1.5.13"
     typescript: "npm:^4.4.3"

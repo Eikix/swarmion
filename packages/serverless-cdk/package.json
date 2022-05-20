@@ -45,6 +45,7 @@
     "jest": "npm:^27.5.1",
     "json-schema-to-ts": "npm:^2.3.0",
     "prettier": "npm:^2.6.2",
+    "serverless": "npm:^3.16.0",
     "ts-node": "npm:^10.6.0",
     "ttypescript": "npm:^1.5.13",
     "typescript": "npm:^4.4.3"

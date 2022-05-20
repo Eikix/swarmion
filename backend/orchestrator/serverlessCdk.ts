@@ -1,19 +1,23 @@
 import type Serverless from 'serverless/index';
 
+const resolveConfigPath = require('serverless/lib/cli/resolve-configuration-path');
+
 const readTsFileWithTsNode = async () => {
-  const sls = await import('./serverless');
+  const configPath = await resolveConfigPath();
+  console.log(configPath);
+  const sls = await require(configPath);
   console.log(sls);
   // @ts-ignore any de ses morts
   // eslint-disable-next-line
-  console.log(new sls.default.custom.myClass('my string').getSavedString());
+  console.log(new sls.custom.myClass('my string').getSavedString());
 };
 
-const serverlessCdk = (serverless: Serverless) => {
+const serverlessCdk = (_serverless: Serverless) => {
   console.log('Coucou');
   readTsFileWithTsNode()
     .then(() => console.log('hi'))
-    .catch(() =>
-      console.log(`err: ${JSON.stringify(serverless.service.custom)}`),
+    .catch((err) =>
+      console.log(`err: ${JSON.stringify(err)}`),
     );
 };
 

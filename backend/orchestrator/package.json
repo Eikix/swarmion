@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@swarmion/orchestrator-contracts": "^0.6.0",
+    "@swarmion/serverless-cdk": "^1.0.0",
     "@swarmion/serverless-configuration": "^0.6.0",
     "@swarmion/serverless-contracts": "^0.6.0",
     "@swarmion/serverless-helpers": "^0.6.0",
