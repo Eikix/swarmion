@@ -5,7 +5,9 @@ import { OrchestratorStack } from './stack';
 
 type CloudFormationTemplate = Exclude<AWS['resources'], undefined>;
 
-export const cdkApp = new App();
+export const cdkApp = new App({
+  context: { 'aws:cdk:enable-asset-metadata': true },
+});
 
 export const cdkStack = new OrchestratorStack(
   cdkApp,

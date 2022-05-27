@@ -38,6 +38,9 @@
     "test-type": "nx run-many --target=test-type --all --parallel=4",
     "test-unit": "nx run-many --target=test-unit --all --parallel=4"
   },
+  "dependencies": {
+    "esbuild": "^0.14.40"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
