@@ -1,5 +1,6 @@
 import { AWS } from '@serverless/typescript';
 import { App, Stack } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 import merge from 'lodash/merge';
 import * as Serverless from 'serverless';
 import * as Plugin from 'serverless/classes/Plugin';
@@ -16,7 +17,6 @@ const resolveServerlessConfigPath = async (): Promise<string> => {
 
 const getServerlessObject = async (): Promise<Serverless> => {
   const configPath = await resolveServerlessConfigPath();
-  console.log(configPath);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const sls = await require(configPath);
@@ -37,6 +37,10 @@ export class ServerlessCdkPlugin implements Plugin {
   stackName: string;
   app: App;
   stack: Stack;
+  configurationVariablesSources?: Plugin.ConfigurationVariablesSources;
+  construct?: Construct;
+  constructInstantiationPromise?: Promise<void> = undefined;
+
   constructor(
     serverless: Serverless,
     cliOptions: OptionsExtended,
@@ -55,9 +59,52 @@ export class ServerlessCdkPlugin implements Plugin {
     this.stack = new Stack(this.app, this.stackName);
 
     this.hooks = {
-      initialize: async () => await this.instantiateConstruct(),
+      initialize: async () => await this.resolveConstruct(),
       'after:package:compileEvents': () => this.appendCloudformationResources(),
     };
+
+    this.configurationVariablesSources = {
+      serverlessCdkBridgePlugin: {
+        resolve: async ({ address }: { address: string }) => {
+          await this.resolveConstruct();
+
+          if (this.construct === undefined) {
+            throw new Error('Construct has not been instanciated');
+          }
+
+          if (!(address in this.construct)) {
+            throw new Error('Unexpected');
+          }
+
+          return {
+            // @ts-expect-error we cannot know at build time if the adress key is indeed in the construct
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            value: this.stack.resolve(this.construct[address]),
+          };
+        },
+      },
+    };
+  }
+
+  async resolveConstruct(): Promise<void> {
+    if (
+      this.construct === undefined &&
+      this.constructInstantiationPromise === undefined
+    ) {
+      this.constructInstantiationPromise = this.instantiateConstruct();
+    }
+
+    await this.constructInstantiationPromise;
+  }
+
+  async instantiateConstruct(): Promise<void> {
+    const sls = await getServerlessObject();
+    // @ts-expect-error We well properly type the return of getServerlessObject later
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    this.construct = new sls.custom.myConstruct(
+      this.stack,
+      'serverlessCdkBridgeConstruct',
+    );
   }
 
   appendCloudformationResources(): void {
@@ -68,13 +115,5 @@ export class ServerlessCdkPlugin implements Plugin {
     merge(this.serverless.service, {
       resources: { Resources, Outputs, Conditions },
     });
-  }
-
-  async instantiateConstruct(): Promise<void> {
-    const sls = await getServerlessObject();
-
-    // @ts-expect-error We well properly type the return of getServerlessObject later
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    new sls.custom.myConstruct(this.stack, 'myConstructId');
   }
 }
