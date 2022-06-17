@@ -1,16 +1,11 @@
-import { AWS } from '@serverless/typescript';
-
-import { MyConstruct } from './myConstruct';
+import { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
   service: 'test-app',
   configValidationMode: 'error',
-  plugins: ['../../src'],
+  plugins: ['../../../../src'],
   provider: {
     name: 'aws',
-  },
-  custom: {
-    myConstruct: MyConstruct,
   },
 };
 

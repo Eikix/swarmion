@@ -1,3 +1,3 @@
 import { jestConfig } from '@swarmion/configuration';
 
-export default { ...jestConfig, testTimeout: 10000 };
+export default { ...jestConfig, testTimeout: 15000 };
