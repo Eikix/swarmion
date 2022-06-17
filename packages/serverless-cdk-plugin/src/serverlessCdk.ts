@@ -52,7 +52,10 @@ export class ServerlessCdkPlugin implements Plugin {
 
     this.stackName = 'myStackName';
 
-    this.app = new App();
+    this.app = new App({
+      // Used to detect asset usage through metadata
+      context: { 'aws:cdk:enable-asset-metadata': true },
+    });
     this.stack = new Stack(this.app, this.stackName);
 
     this.hooks = {
@@ -108,6 +111,24 @@ export class ServerlessCdkPlugin implements Plugin {
     const { Resources, Outputs, Conditions } = this.app
       .synth()
       .getStackByName(this.stackName).template as CloudFormationTemplate;
+
+    if (Resources !== undefined) {
+      Object.entries(Resources).forEach(([logicalId, resource]) => {
+        if ('Metadata' in resource) {
+          if (resource.Metadata === undefined) {
+            return;
+          }
+
+          Object.keys(resource.Metadata).forEach(metadataKey => {
+            if (metadataKey.includes('aws:asset:')) {
+              throw new Error(
+                `Resource ${logicalId} cannot be deployed because it needs the bootstrap stack`,
+              );
+            }
+          });
+        }
+      });
+    }
 
     merge(this.serverless.service, {
       resources: { Resources, Outputs, Conditions },
