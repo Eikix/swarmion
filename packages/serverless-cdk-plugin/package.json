@@ -18,6 +18,7 @@
   "files": [
     "dist"
   ],
+  "module": "dist/esm/index.js",
   "scripts": {
     "lint-fix": "yarn linter-base-config --fix",
     "lint-fix-all": "yarn lint-fix .",
