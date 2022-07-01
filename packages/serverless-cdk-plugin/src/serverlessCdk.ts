@@ -5,7 +5,6 @@ import merge from 'lodash/merge';
 import * as Serverless from 'serverless';
 import * as Plugin from 'serverless/classes/Plugin';
 import resolveConfigPath from 'serverless/lib/cli/resolve-configuration-path';
-import { O } from 'ts-toolbelt';
 
 type CloudFormationTemplate = Exclude<AWS['resources'], undefined>;
 
@@ -115,9 +114,3 @@ export class ServerlessCdkPlugin implements Plugin {
     });
   }
 }
-
-export const getCdkProperty = <T extends Construct>(
-  prop: O.SelectKeys<T, string> & string,
-): string => {
-  return `$\{serverlessCdkBridgePlugin:${prop}}`;
-};

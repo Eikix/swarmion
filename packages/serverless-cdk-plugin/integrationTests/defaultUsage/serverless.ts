@@ -1,6 +1,6 @@
 import { AWS } from '@serverless/typescript';
 
-import { getCdkProperty } from 'serverlessCdk';
+import { getCdkProperty } from 'helper';
 
 import { MyConstruct } from './myConstruct';
 
