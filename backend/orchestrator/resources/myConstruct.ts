@@ -4,7 +4,6 @@ import { Construct } from 'constructs';
 export class MyConstruct extends Construct {
   public dynamodbArn: string;
   public dynamodbName: string;
-
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
@@ -13,8 +12,6 @@ export class MyConstruct extends Construct {
       sortKey: { name: 'SK', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
     });
-
-    console.log(' YOYOYO');
 
     this.dynamodbArn = tableArn;
     this.dynamodbName = tableName;
